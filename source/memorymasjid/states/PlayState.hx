@@ -1,4 +1,4 @@
-package;
+package memorymasjid.states;
 
 import flixel.FlxG;
 import flixel.ui.FlxButton;
