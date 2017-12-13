@@ -3,6 +3,7 @@ package memorymasjid.states;
 import flixel.FlxG;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
+import flixel.math.FlxRandom;
 import helix.core.HelixSprite;
 import helix.core.HelixState;
 import helix.core.HelixText;
@@ -10,19 +11,28 @@ import helix.data.Config;
 
 class PlayState extends HelixState
 {
+	private var random:FlxRandom = new FlxRandom();
+
 	override public function create():Void
 	{
 		super.create();
-
-		var sprite = new HelixSprite("assets/images/gem-red.png");
-		sprite.x = 300;
-		sprite.y = 100;
-		this.createPattern(sprite, 3);
+		this.createRandomPattern();
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+	}
+
+	private function createRandomPattern():Array<HelixSprite>
+	{
+		var gem:String = random.getObject(["red", "blue", "green", "purple"]);
+		var sprite:HelixSprite = new HelixSprite('assets/images/gem-${gem}.png');
+		sprite.x = 200;
+		sprite.y = 100;
+		
+		var number = random.int(1, 9);
+		return this.createPattern(sprite, number);
 	}
 
 	private function createPattern(originalSprite:HelixSprite, numSprites:Int):Array<HelixSprite>
