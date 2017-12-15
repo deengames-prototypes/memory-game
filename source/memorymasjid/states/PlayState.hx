@@ -15,9 +15,10 @@ class PlayState extends HelixState
 	private static inline var FONT_SIZE:Int = 32;
 	private var random:FlxRandom = new FlxRandom();
 	private var currentPattern:String = "";
-	private var previousPatterns:Array<String> = new Array<String>();
+	private var previousPatterns = new Array<String>();
 	private var numCorrect:Int = 0;
 	private var numIncorrect:Int = 0;
+	private var patternSprites = new Array<HelixSprite>();
 
 	override public function create():Void
 	{
@@ -30,32 +31,14 @@ class PlayState extends HelixState
 		yesButton.onClick(function()
 		{
 			var isCorrect:Bool = this.previousPatterns.contains(currentPattern);
-			if (isCorrect)
-			{
-				numCorrect++;
-				trace('RIGHT!');
-			}
-			else
-			{
-				numIncorrect++;
-				trace("WRONG!");
-			}
+			this.checkAndCyclePattern(isCorrect);
 		});
 
 		var  noButton = new HelixText(450, 75, "No", FONT_SIZE);
 		noButton.onClick(function()
 		{
 			var isCorrect:Bool = !this.previousPatterns.contains(currentPattern);
-			if (isCorrect)
-			{
-				numCorrect++;
-				trace("RIGHT!");
-			}
-			else
-			{
-				numIncorrect++;
-				trace("WRONG!");
-			}
+			this.checkAndCyclePattern(isCorrect);
 		});
 	}
 
@@ -64,7 +47,7 @@ class PlayState extends HelixState
 		super.update(elapsed);
 	}
 
-	private function createRandomPattern():Array<HelixSprite>
+	private function createRandomPattern():Void
 	{
 		var gem:String = random.getObject(["red", "blue", "green", "purple"]);
 		var sprite:HelixSprite = new HelixSprite('assets/images/gem-${gem}.png');
@@ -73,33 +56,56 @@ class PlayState extends HelixState
 		
 		var number = random.int(1, 9);
 		this.currentPattern = '${gem}-${number}';
-		return this.createPattern(sprite, number);
+		this.createPattern(sprite, number);
 	}
 
-	private function createPattern(originalSprite:HelixSprite, numSprites:Int):Array<HelixSprite>
+	private function checkAndCyclePattern(isCorrect:Bool):Void
 	{
+		if (isCorrect)
+		{
+			numCorrect++;
+			trace('RIGHT! (${numCorrect})');
+		}
+		else
+		{
+			numIncorrect++;
+			trace('WRONG! (${numIncorrect})');
+		}
+
+		for (sprite in this.patternSprites)
+		{
+			sprite.destroy();
+			remove(sprite);
+		}
+
+		this.createRandomPattern();
+	}
+
+	private function createPattern(originalSprite:HelixSprite, numSprites:Int):Void
+	{
+		while (this.patternSprites.length > 0)
+		{
+			this.patternSprites.pop();
+		}
+
 		// Simple pattern: staggered three rows of three
 		if (numSprites < 1 || numSprites > 9)
 		{
 			throw('numSprites must be between 2 and 9 inclusive (was: ${numSprites})');
 		}
 
-		var toReturn = new Array<HelixSprite>();
-		toReturn.push(originalSprite);
+		this.patternSprites.push(originalSprite);
 		
 		for (i in 1 ... numSprites)
 		{
-			toReturn.push(originalSprite.clone());
+			this.patternSprites.push(originalSprite.clone());
 		}
 
-		for (i in 1 ... toReturn.length)
+		for (i in 1 ... this.patternSprites.length)
 		{
-			var sprite = toReturn[i];
+			var sprite = this.patternSprites[i];
 			sprite.x = originalSprite.x + ((i % 3) * 1.1 * sprite.width);
 			sprite.y = originalSprite.y + ((i / 3) * 1.1 * sprite.height);
-			add(sprite);
 		}
-
-		return toReturn;
 	}
 }
