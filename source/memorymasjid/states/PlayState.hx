@@ -11,12 +11,17 @@ import helix.data.Config;
 
 class PlayState extends HelixState
 {
+	private static inline var FONT_SIZE:Int = 32;
 	private var random:FlxRandom = new FlxRandom();
 
 	override public function create():Void
 	{
 		super.create();
 		this.createRandomPattern();
+
+		new HelixText(316, 16, "Seen this before?", FONT_SIZE);
+		var  yesButton = new HelixText(316, 75, "Yes", FONT_SIZE);
+		var  noButton = new HelixText(450, 75, "No", FONT_SIZE);
 	}
 
 	override public function update(elapsed:Float):Void
@@ -28,8 +33,8 @@ class PlayState extends HelixState
 	{
 		var gem:String = random.getObject(["red", "blue", "green", "purple"]);
 		var sprite:HelixSprite = new HelixSprite('assets/images/gem-${gem}.png');
-		sprite.x = 200;
-		sprite.y = 100;
+		sprite.x = 350;
+		sprite.y = 200;
 		
 		var number = random.int(1, 9);
 		return this.createPattern(sprite, number);
