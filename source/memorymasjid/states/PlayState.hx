@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 import flixel.math.FlxRandom;
+using haxesharp.collections.Linq;
 import helix.core.HelixSprite;
 import helix.core.HelixState;
 import helix.core.HelixText;
@@ -13,6 +14,10 @@ class PlayState extends HelixState
 {
 	private static inline var FONT_SIZE:Int = 32;
 	private var random:FlxRandom = new FlxRandom();
+	private var currentPattern:String = "";
+	private var previousPatterns:Array<String> = new Array<String>();
+	private var numCorrect:Int = 0;
+	private var numIncorrect:Int = 0;
 
 	override public function create():Void
 	{
@@ -20,8 +25,38 @@ class PlayState extends HelixState
 		this.createRandomPattern();
 
 		new HelixText(316, 16, "Seen this before?", FONT_SIZE);
+		
 		var  yesButton = new HelixText(316, 75, "Yes", FONT_SIZE);
+		yesButton.onClick(function()
+		{
+			var isCorrect:Bool = this.previousPatterns.contains(currentPattern);
+			if (isCorrect)
+			{
+				numCorrect++;
+				trace('RIGHT!');
+			}
+			else
+			{
+				numIncorrect++;
+				trace("WRONG!");
+			}
+		});
+
 		var  noButton = new HelixText(450, 75, "No", FONT_SIZE);
+		noButton.onClick(function()
+		{
+			var isCorrect:Bool = !this.previousPatterns.contains(currentPattern);
+			if (isCorrect)
+			{
+				numCorrect++;
+				trace("RIGHT!");
+			}
+			else
+			{
+				numIncorrect++;
+				trace("WRONG!");
+			}
+		});
 	}
 
 	override public function update(elapsed:Float):Void
@@ -37,6 +72,7 @@ class PlayState extends HelixState
 		sprite.y = 200;
 		
 		var number = random.int(1, 9);
+		this.currentPattern = '${gem}-${number}';
 		return this.createPattern(sprite, number);
 	}
 
