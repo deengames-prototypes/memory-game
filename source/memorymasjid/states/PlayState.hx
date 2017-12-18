@@ -13,14 +13,18 @@ import memorymasjid.view.Pattern;
 class PlayState extends HelixState
 {
 	private static inline var FONT_SIZE:Int = 32;
+
 	private var previousPatterns = new Array<String>();
 	private var numCorrect:Int = 0;
 	private var numIncorrect:Int = 0;
-	private var pattern = new Pattern();
+	private var pattern:Pattern;
+	private var currentLevelNumber:Int = 1;
 
 	override public function create():Void
 	{
 		super.create();
+
+		pattern = new Pattern(currentLevelNumber);
 		pattern.generatePattern();
 
 		new HelixText(316, 16, "Seen this before?", FONT_SIZE);
