@@ -62,6 +62,7 @@ class PlayState extends HelixState
 			trace('WRONG! (${numIncorrect})');
 		}
 		
+		this.previousPatterns.push(this.pattern.currentPattern);
 		this.pattern.generatePattern();
 	}
 }
