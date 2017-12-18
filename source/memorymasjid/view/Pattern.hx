@@ -13,15 +13,20 @@ class Pattern
 {
 	public var currentPattern(default, null):String = "";
 
+	// 3 + (level/4) => 3, 3, 3, 3, 4, 4, 4, 4, ...
     private var validColours:Array<String> = ["red", "blue", "green", "purple"];
 	private var currentPatternSprites:Array<HelixSprite> =  new Array<HelixSprite>();
 	private var random:FlxRandom = new FlxRandom();
 
+	// 3 + (level/2) => 3, 3, 4, 4, 5, 5, ...
+	private var maxPatternNumber:Int = 9;
+
     public function new(levelNumber:Int)
 	{
 		random.shuffle(this.validColours);
+		this.maxPatternNumber = 3 + Std.int((levelNumber / 2));
 
-		var numColours = Std.int(Math.min(validColours.length, 2 + levelNumber));
+		var numColours = Std.int(Math.min(validColours.length, levelNumber + 2));
 		if (numColours != validColours.length)
 		{
 			// Butcher our const. Yeah, I know, I'm bad.
@@ -36,7 +41,7 @@ class Pattern
 		sprite.x = 350;
 		sprite.y = 200;
 		
-		var number = random.int(1, 9);
+		var number = random.int(1, maxPatternNumber);
 		this.currentPattern = '${gem}-${number}';
 		return this.createPatternSprites(sprite, number);
 	}
