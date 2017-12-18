@@ -31,7 +31,6 @@ class Pattern
 		var numColours = Std.int(Math.min(validColours.length, levelNumber + 2));
 		if (numColours != validColours.length)
 		{
-			// Butcher our const. Yeah, I know, I'm bad.
 			validColours = validColours.take(numColours);
 		}
 	}
