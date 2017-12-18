@@ -1,8 +1,10 @@
 package memorymasjid.view;
 
+import flixel.FlxG;
+import flixel.math.FlxRandom;
+import flixel.tweens.FlxTween;
 using haxesharp.collections.Linq;
 import helix.core.HelixSprite;
-import flixel.math.FlxRandom;
 
 /**
  *  A pattern class. Represents a pattern (a colour and number, eg. red-6), and
@@ -46,21 +48,29 @@ class Pattern
 		return this.createPatternSprites(sprite, number);
 	}
 
+	/**
+	 *  Creates sprites in a simple pattern: staggered three rows of three.
+	 *  Destroys existing sprites (if present) first.
+	 */
     private function createPatternSprites(originalSprite:HelixSprite, numSprites:Int):Void
 	{
-        var toReturn = new Array<HelixSprite>();
-
-		while (this.currentPatternSprites.length > 0)
-		{
-			this.currentPatternSprites.pop().destroy();
-		}
-
-		// Simple pattern: staggered three rows of three
 		if (numSprites < 1 || numSprites > 9)
 		{
 			throw('numSprites must be between 2 and 9 inclusive (was: ${numSprites})');
 		}
 
+        var toReturn = new Array<HelixSprite>();
+
+		while (this.currentPatternSprites.any())
+		{
+			var sprite = this.currentPatternSprites.pop();
+			var tween = FlxTween.tween(sprite, { alpha: 0, x: FlxG.width }, 0.5);
+			tween.onComplete = (t) =>
+			{
+				sprite.destroy();
+			}
+		}
+		
 		this.currentPatternSprites.push(originalSprite);
 		
 		for (i in 1 ... numSprites)
