@@ -5,6 +5,7 @@ import flixel.math.FlxRandom;
 import flixel.tweens.FlxTween;
 using haxesharp.collections.Linq;
 import helix.core.HelixSprite;
+import helix.data.Config;
 
 /**
  *  A pattern class. Represents a pattern (a colour and number, eg. red-6), and
@@ -16,23 +17,25 @@ class Pattern
 	public var currentPattern(default, null):String = "";
 
 	// 3 + (level/4) => 3, 3, 3, 3, 4, 4, 4, 4, ...
-    private var validColours:Array<String> = ["red", "blue", "green", "purple"];
+    private var validColours:Array<String> = Config.get("pattern").allColours;
 	private var currentPatternSprites:Array<HelixSprite> =  new Array<HelixSprite>();
 	private var random:FlxRandom = new FlxRandom();
 
 	// 3 + (level/2) => 3, 3, 4, 4, 5, 5, ...
-	private var maxPatternNumber:Int = 9;
+	private var maxPatternNumber:Int = Config.get("pattern").maximumNumber;
 
     public function new(levelNumber:Int)
 	{
-		random.shuffle(this.validColours);
-		this.maxPatternNumber = 3 + Std.int((levelNumber / 2));
+		this.maxPatternNumber = Config.get("pattern").minimumNumber +
+			Std.int((levelNumber / Config.get("pattern").levelsPerNewPattern));
 
-		var numColours = Std.int(Math.min(validColours.length, levelNumber + 2));
-		if (numColours != validColours.length)
-		{
-			validColours = validColours.take(numColours);
-		}
+		random.shuffle(this.validColours);
+		
+		var numColours = Config.get("pattern").minimumColours +
+			Std.int((levelNumber / Config.get("pattern").levelsPerNewColour));
+
+		numColours = Std.int(Math.min(numColours, validColours.length));
+		validColours = validColours.take(numColours);
 	}
 
 	public function generatePattern():Void
@@ -53,6 +56,7 @@ class Pattern
 		while (this.currentPatternSprites.any())
 		{
 			var sprite = this.currentPatternSprites.pop();
+			// TODO: Don't prototype UI/effects!!!!
 			var tween = FlxTween.tween(sprite, { alpha: 0, x: FlxG.width }, 0.5);
 			tween.onComplete = (t) =>
 			{
@@ -67,9 +71,12 @@ class Pattern
 	 */
     private function createPatternSprites(originalSprite:HelixSprite, numSprites:Int):Void
 	{
-		if (numSprites < 1 || numSprites > 9)
+		var minVariations = Config.get("pattern").minimumVariationsPerPattern;
+		var maxVariations = Config.get("pattern").maximumVariationsPerPattern;
+
+		if (numSprites < minVariations || numSprites > maxVariations)
 		{
-			throw('numSprites must be between 1 and 9 inclusive (was: ${numSprites})');
+			throw('numSprites must be between ${minVariations} and ${maxVariations} inclusive (was: ${numSprites})');
 		}
 
         var toReturn = new Array<HelixSprite>();

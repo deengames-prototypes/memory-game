@@ -5,5 +5,19 @@
         "minimumItemsToShow": 3,
         // If you get everything right, stop after this many items
         "maximumItemsToShow": 10
+    },
+    "pattern": {
+        //// Pattern variations
+        "minimumNumber": 3, // No less than this number of variations per pattern
+        // Max number of items (if generated), or the max unique variations of a pattern (eg. blue)
+        "maximumNumber": 9,
+        "levelsPerNewPattern": 2,
+        "minimumVariationsPerPattern": 1,
+        "maximumVariationsPerPattern": 9,
+        
+        //// Colours
+        "allColours": ["red", "blue", "green", "purple"],
+        "minimumColours": 3,
+        "levelsPerNewColour": 4
     }
 }
