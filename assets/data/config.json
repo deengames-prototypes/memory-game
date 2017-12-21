@@ -1,3 +1,9 @@
 {
-    "fontSize": 32
+    "fontSize": 32,
+    "nback": {
+        // Even if you get all the n-back questions wrong, at least show this many items
+        "minimumItemsToShow": 3,
+        // If you get everything right, stop after this many items
+        "maximumItemsToShow": 10
+    }
 }

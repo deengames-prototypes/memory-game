@@ -52,20 +52,21 @@ class NBackState extends HelixState
 		if (isCorrect)
 		{
 			numCorrect++;
+			trace("RIGHT: " + numCorrect);
 		}
 		else
 		{
 			numIncorrect++;
+			trace("WRONG: " + numIncorrect);
 			// Change on wrong, but only if we answered at least three times
-			if (numCorrect + numIncorrect >= 3)
+			if (numCorrect + numIncorrect >= Config.get("nback").minimumItemsToShow)
 			{
 				this.pattern.destroyCurrentPatternSprites();
 				FlxG.switchState(new GridState());
 			}
 		}
 
-		// Change on 10 correct in a row
-		if (numCorrect >= 10)
+		if (numCorrect >= Config.get("nback").maximumItemsToShow)
 		{
 			trace("Perfect!");
 			this.pattern.destroyCurrentPatternSprites();
