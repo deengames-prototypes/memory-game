@@ -19,6 +19,7 @@ class PlayState extends HelixState
 	private var numIncorrect:Int = 0;
 	private var pattern:Pattern;
 	private var currentLevelNumber:Int = 1;
+	private var currentState:GameState = GameState.NBack;
 
 	override public function create():Void
 	{
@@ -54,15 +55,37 @@ class PlayState extends HelixState
 		if (isCorrect)
 		{
 			numCorrect++;
-			trace('RIGHT! (${numCorrect})');
+			trace(numCorrect);	
 		}
 		else
 		{
 			numIncorrect++;
-			trace('WRONG! (${numIncorrect})');
+			// Change on wrong, but only if we answered at least three times
+			if (numCorrect + numIncorrect >= 3)
+			{
+				this.pattern.destroyCurrentPatternSprites();
+				this.currentState = GameState.Grid;
+			}
 		}
-		
-		this.previousPatterns.push(this.pattern.currentPattern);
-		this.pattern.generatePattern();
+
+		// Change on 10 correct in a row
+		if (numCorrect >= 10)
+		{
+			trace("Perfect!");
+			this.pattern.destroyCurrentPatternSprites();
+			this.currentState = GameState.Grid;
+		}
+
+		if (this.currentState == GameState.NBack)
+		{
+			this.previousPatterns.push(this.pattern.currentPattern);
+			this.pattern.generatePattern();
+		}
 	}
+}
+
+enum GameState
+{
+	NBack;
+	Grid;
 }

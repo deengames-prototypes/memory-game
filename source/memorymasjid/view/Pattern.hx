@@ -47,6 +47,20 @@ class Pattern
 		return this.createPatternSprites(sprite, number);
 	}
 
+
+	public function destroyCurrentPatternSprites():Void
+	{
+		while (this.currentPatternSprites.any())
+		{
+			var sprite = this.currentPatternSprites.pop();
+			var tween = FlxTween.tween(sprite, { alpha: 0, x: FlxG.width }, 0.5);
+			tween.onComplete = (t) =>
+			{
+				sprite.destroy();
+			}
+		}
+	}
+	
 	/**
 	 *  Creates sprites in a simple pattern: staggered three rows of three.
 	 *  Destroys existing sprites (if present) first.
@@ -60,15 +74,7 @@ class Pattern
 
         var toReturn = new Array<HelixSprite>();
 
-		while (this.currentPatternSprites.any())
-		{
-			var sprite = this.currentPatternSprites.pop();
-			var tween = FlxTween.tween(sprite, { alpha: 0, x: FlxG.width }, 0.5);
-			tween.onComplete = (t) =>
-			{
-				sprite.destroy();
-			}
-		}
+		this.destroyCurrentPatternSprites();
 		
 		this.currentPatternSprites.push(originalSprite);
 		
