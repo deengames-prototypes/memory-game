@@ -55,7 +55,6 @@ class PlayState extends HelixState
 		if (isCorrect)
 		{
 			numCorrect++;
-			trace(numCorrect);	
 		}
 		else
 		{
