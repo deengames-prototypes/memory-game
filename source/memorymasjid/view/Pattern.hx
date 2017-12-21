@@ -69,7 +69,7 @@ class Pattern
 	{
 		if (numSprites < 1 || numSprites > 9)
 		{
-			throw('numSprites must be between 2 and 9 inclusive (was: ${numSprites})');
+			throw('numSprites must be between 1 and 9 inclusive (was: ${numSprites})');
 		}
 
         var toReturn = new Array<HelixSprite>();

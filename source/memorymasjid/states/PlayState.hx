@@ -12,7 +12,7 @@ import memorymasjid.view.Pattern;
 
 class PlayState extends HelixState
 {
-	private static inline var FONT_SIZE:Int = 32;
+	private static var FONT_SIZE:Int;
 
 	private var previousPatterns = new Array<String>();
 	private var numCorrect:Int = 0;
@@ -24,6 +24,8 @@ class PlayState extends HelixState
 	override public function create():Void
 	{
 		super.create();
+
+		FONT_SIZE = Config.get("fontSize");
 
 		pattern = new Pattern(currentLevelNumber);
 		pattern.generatePattern();
@@ -43,11 +45,6 @@ class PlayState extends HelixState
 			var isCorrect:Bool = !this.previousPatterns.contains(this.pattern.currentPattern);
 			this.checkAndCyclePattern(isCorrect);
 		});
-	}
-
-	override public function update(elapsed:Float):Void
-	{
-		super.update(elapsed);
 	}
 
 	private function checkAndCyclePattern(isCorrect:Bool):Void
