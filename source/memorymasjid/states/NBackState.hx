@@ -10,7 +10,8 @@ import helix.core.HelixText;
 import helix.data.Config;
 import memorymasjid.view.Pattern;
 
-class PlayState extends HelixState
+// TODO: turn this into a substate!
+class NBackState extends HelixState
 {
 	private static var FONT_SIZE:Int;
 
@@ -19,7 +20,6 @@ class PlayState extends HelixState
 	private var numIncorrect:Int = 0;
 	private var pattern:Pattern;
 	private var currentLevelNumber:Int = 1;
-	private var currentState:GameState = GameState.NBack;
 
 	override public function create():Void
 	{
@@ -60,7 +60,7 @@ class PlayState extends HelixState
 			if (numCorrect + numIncorrect >= 3)
 			{
 				this.pattern.destroyCurrentPatternSprites();
-				this.currentState = GameState.Grid;
+				FlxG.switchState(new GridState());
 			}
 		}
 
@@ -69,10 +69,12 @@ class PlayState extends HelixState
 		{
 			trace("Perfect!");
 			this.pattern.destroyCurrentPatternSprites();
-			this.currentState = GameState.Grid;
+			FlxG.switchState(new GridState());
 		}
 
-		if (this.currentState == GameState.NBack)
+		// This doesn't make sense. But they appear on the new state even though
+		// the switch (a few lines up) executes.
+		if (HelixState.current == this)
 		{
 			this.previousPatterns.push(this.pattern.currentPattern);
 			this.pattern.generatePattern();
