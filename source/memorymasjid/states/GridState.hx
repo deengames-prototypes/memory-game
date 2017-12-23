@@ -12,8 +12,23 @@ import memorymasjid.view.Pattern;
 
 class GridState extends HelixState
 {
+    // TODO: refactor into Grid class?
+    private var gridTiles = new Array<Array<HelixSprite>>();
+    private var gridWidth:Int = 0;
+    private var gridHeight:Int = 0;
+
     override public function create():Void
     {
-        trace("Hello, grid!!");
+        this.gridWidth = Config.get("grid").widthInTiles;
+        this.gridHeight = Config.get("grid").heightInTiles;
+        this.gridTiles = [for (x in 0...this.gridWidth) [for (y in 0...gridHeight) createTile(x, y)]];
+    }
+
+    private function createTile(x:Int, y:Int):HelixSprite
+    {
+        var sprite = new HelixSprite("assets/images/grid-tile.png");
+        sprite.x = x * sprite.width;
+        sprite.y = y * sprite.height;
+        return sprite;
     }
 }

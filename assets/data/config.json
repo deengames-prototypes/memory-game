@@ -19,5 +19,9 @@
         "allColours": ["red", "blue", "green", "purple"],
         "minimumColours": 3,
         "levelsPerNewColour": 4
+    },
+    "grid": {
+        "widthInTiles": 5,
+        "heightInTiles": 5
     }
 }
