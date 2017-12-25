@@ -62,7 +62,9 @@ class NBackState extends HelixState
 			if (numCorrect + numIncorrect >= Config.get("nback").minimumItemsToShow)
 			{
 				this.pattern.destroyCurrentPatternSprites();
-				FlxG.switchState(new GridState());
+				// 3 or the number right, whichever is larger.
+				var numToShow = Std.int(Math.max(Config.get("nback").minimumItemsToShow, numCorrect));
+				FlxG.switchState(new GridState(numToShow));
 			}
 		}
 
@@ -70,7 +72,7 @@ class NBackState extends HelixState
 		{
 			trace("Perfect!");
 			this.pattern.destroyCurrentPatternSprites();
-			FlxG.switchState(new GridState());
+			FlxG.switchState(new GridState(Config.get("nback").maximumItemsToShow));
 		}
 
 		// This doesn't make sense. But they appear on the new state even though
