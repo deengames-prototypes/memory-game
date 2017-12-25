@@ -27,8 +27,8 @@ class GridState extends HelixState
     private function createTile(x:Int, y:Int):HelixSprite
     {
         var sprite = new HelixSprite("assets/images/grid-tile.png");
-        sprite.x = x * sprite.width;
-        sprite.y = y * sprite.height;
+        sprite.x = 200 + x * sprite.width;
+        sprite.y = 50 + y * sprite.height;
         return sprite;
     }
 }
